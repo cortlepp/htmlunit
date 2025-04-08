@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -99,10 +100,9 @@ import org.htmlunit.util.HeaderUtils;
 import org.htmlunit.util.MimeType;
 import org.htmlunit.util.NameValuePair;
 import org.htmlunit.util.UrlUtils;
-import org.htmlunit.websocket.JettyWebSocketAdapter.JettyWebSocketAdapterFactory;
-import org.htmlunit.websocket.WebSocketAdapter;
-import org.htmlunit.websocket.WebSocketAdapterFactory;
-import org.htmlunit.websocket.WebSocketListener;
+import org.htmlunit.websocket.client.api.WebSocketAdapter;
+import org.htmlunit.websocket.client.api.WebSocketAdapterFactory;
+import org.htmlunit.websocket.client.api.WebSocketListener;
 import org.htmlunit.webstart.WebStartHandler;
 
 /**
@@ -337,7 +337,17 @@ public class WebClient implements Serializable, AutoCloseable {
         }
         loadQueue_ = new ArrayList<>();
 
-        webSocketAdapterFactory_ = new JettyWebSocketAdapterFactory();
+        //todo maybe better pass the classname as a system property with jetty as the default
+        try {
+            try {
+                webSocketAdapterFactory_ = (WebSocketAdapterFactory) Class.forName("org.htmlunit.websocket.client.jetty9.JettyWebSocketAdapter.JettyWebSocketAdapterFactory").getDeclaredConstructor().newInstance();
+            } catch (ClassNotFoundException | NoSuchMethodException e) {
+                webSocketAdapterFactory_ = (WebSocketAdapterFactory) Class.forName("org.htmlunit.websocket.client.jdk.JdkWebSocketAdapter.JdkWebSocketAdapterFactory").getDeclaredConstructor().newInstance();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
 
         // The window must be constructed AFTER the script engine.
         currentWindowTracker_ = new CurrentWindowTracker(this, true);
@@ -2905,7 +2915,7 @@ public class WebClient implements Serializable, AutoCloseable {
      * @return a new {@link WebSocketAdapter}
      */
     public WebSocketAdapter buildWebSocketAdapter(final WebSocketListener webSocketListener) {
-        return webSocketAdapterFactory_.buildWebSocketAdapter(this, webSocketListener);
+        return webSocketAdapterFactory_.buildWebSocketAdapter(webSocketListener, null, this.executor_, false ,0,0,0,0);
     }
 
     /**

@@ -44,8 +44,8 @@ import org.htmlunit.javascript.host.event.Event;
 import org.htmlunit.javascript.host.event.EventTarget;
 import org.htmlunit.javascript.host.event.MessageEvent;
 import org.htmlunit.util.UrlUtils;
-import org.htmlunit.websocket.WebSocketAdapter;
-import org.htmlunit.websocket.WebSocketListener;
+import org.htmlunit.websocket.client.api.WebSocketAdapter;
+import org.htmlunit.websocket.client.api.WebSocketListener;
 
 /**
  * A JavaScript object for {@code WebSocket}.

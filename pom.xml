@@ -29,7 +29,7 @@
         <htmlunitcssparser.version>4.11.0</htmlunitcssparser.version>
         <htmlunitcorejs.version>4.12.0-SNAPSHOT</htmlunitcorejs.version>
         <htmlunitneko.version>4.12.0-SNAPSHOT</htmlunitneko.version>
-        <htmlunitwebsocketclient.version>4.11.0</htmlunitwebsocketclient.version>
+        <htmlunitwebsocketclient.version>5.0.0-SNAPSHOT</htmlunitwebsocketclient.version>
         <htmlunitxpath.version>4.11.0</htmlunitxpath.version>
 
         <httpcomponents.version>4.5.14</httpcomponents.version>
@@ -1253,7 +1253,19 @@
         </dependency>
         <dependency>
             <groupId>org.htmlunit</groupId>
-            <artifactId>htmlunit-websocket-client</artifactId>
+            <artifactId>htmlunit-websocket-client-api</artifactId>
+            <version>${htmlunitwebsocketclient.version}</version>
+        </dependency>
+
+        <!-- only one of the following two is needed, but the latter requires JDK 17 -->
+        <dependency>
+            <groupId>org.htmlunit</groupId>
+            <artifactId>htmlunit-websocket-client-jetty9</artifactId>
+            <version>${htmlunitwebsocketclient.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.htmlunit</groupId>
+            <artifactId>htmlunit-websocket-client-native</artifactId>
             <version>${htmlunitwebsocketclient.version}</version>
         </dependency>
 
